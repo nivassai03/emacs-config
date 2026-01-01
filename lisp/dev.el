@@ -7,7 +7,6 @@
   (setq electric-pair-skip-whitespace 'chomp)
   (setq electric-pair-preserve-balance nil))
 
-
 (use-package show-paren
   :ensure nil
   :hook (prog-mode . show-paren-mode)
@@ -15,6 +14,13 @@
   (setq show-paren-delay 0)
   (setq show-paren-style 'parenthesis))
 
+(use-package eglot
+  :defer t
+  :bind (("C-c l e" . eglot)           ; start eglot
+         ("C-c l s" . eglot-shutdown)  ; stop
+         ("C-c l r" . eglot-reconnect) ; restart
+         ("C-c l a" . eglot-code-actions)
+         ("C-c l R" . eglot-rename)))
 
 (use-package treesit
   :defer t
@@ -37,52 +43,15 @@
   (setq treesit-font-lock-level 4)
   (np/setup-install-grammars))
 
-
-;; (use-package semantic
-;;   :ensure nil
-;;   :config
-;;   (require 'semantic/symref/grep)
-;;   (add-to-list 'semantic-symref-filepattern-alist
-;;                '(c++-ts-mode . ("*.h" "*.hpp" "*.c" "*.cpp" "*.cc"))
-;; 	       '(c-ts-mode . ("*.h" "*.c"))))
-
-(use-package semantic
-  :ensure nil
+(use-package apheleia
   :config
-  (require 'semantic/symref/grep)
-  (dolist (entry '((c++-ts-mode . ("*.h" "*.hpp" "*.c" "*.cpp" "*.cc"))
-                   (c-ts-mode    . ("*.h" "*.c"))
-                   (python-ts-mode . ("*.py"))
-                   (java-ts-mode . ("*.java"))))
-    (add-to-list 'semantic-symref-filepattern-alist entry)))
+  (setf (alist-get 'clang-format-ms apheleia-formatters)
+	'("clang-format" "--fallback-style=Microsoft"))
+  (add-to-list 'apheleia-mode-alist '(c++-ts-mode . clang-format-ms))
+  (add-to-list 'apheleia-mode-alist '(c-ts-mode . clang-format-ms))
+  (apheleia-global-mode +1)
+  :bind
+  ("C-c l f" . apheleia-format-buffer))
 
 
-;; (use-package dumb-jump
-;;   :after xref
-;;   :config
-;;   (add-hook 'xref-backend-functions  #'dumb-jump-xref-activate))
-
-(use-package eglot
-  :defer t
-  :general
-  (np/leader-keys
-    :states '(normal visual)
-    :keympas 'eglot-mode-map
-    "ls" '(eglot :wk "start lsp")
-    "lq" '(eglot-shutdown :wk "shutdow lsp")
-    "lQ" '(eglot-shutdown-all :wk "shutdown all lsp")
-    "lR" '(eglot-rename :wk "rename symbol")
-    "la" '(eglot-code-actions :wk "code actions")
-    "lf" '(eglot-format :wk "format buffer")
-    "ld" '(eglot-find-declaration :wk "find declaration")
-    "lD" '(xref-find-definitions :wk "find definition")
-    "lr" '(xref-find-references :wk "find references")
-    ))
-
-(use-package flymake)
-
-(use-package transient)
-
-(use-package magit
-  :defer t
-  :after transient)
+(provide 'dev)
