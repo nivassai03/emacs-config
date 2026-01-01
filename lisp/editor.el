@@ -6,7 +6,7 @@
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
     :config
-    (evil-mode))
+    (evil-mode 1))
 
 
 (use-package evil-collection
@@ -15,13 +15,9 @@
     (evil-collection-init))
 
 (use-package windmove
-  :ensure nil
-  :general
-  (np/leader-keys
-    :states '(normal visual)
-    "wl" '(windmove-right :wk "move right")
-    "wh" '(windmove-left :wk "move left")
-    "wj" '(windmove-down :wk "move down")
-    "wk" '(windmove-up :wk "move up")))
+  :ensure nil)
 
 
+(use-package deadgrep)
+
+(provide 'editor)

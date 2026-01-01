@@ -7,7 +7,6 @@
   (setq electric-pair-skip-whitespace 'chomp)
   (setq electric-pair-preserve-balance nil))
 
-
 (use-package show-paren
   :ensure nil
   :hook (prog-mode . show-paren-mode)
@@ -15,6 +14,17 @@
   (setq show-paren-delay 0)
   (setq show-paren-style 'parenthesis))
 
+(use-package dumb-jump
+  :init
+  (setq dumb-jump-prefer-searcher 'rg
+        dumb-jump-force-searcher 'rg
+        dumb-jump-selector 'xref))
+
+(use-package xref
+  :ensure nil
+  :config
+  (setq xref-backend-functions (remq 'etags--xref-backend xref-backend-functions))
+  (add-to-list 'xref-backend-functions #'dumb-jump-xref-activate t))
 
 (use-package treesit
   :defer t
@@ -37,15 +47,6 @@
   (setq treesit-font-lock-level 4)
   (np/setup-install-grammars))
 
-
-;; (use-package semantic
-;;   :ensure nil
-;;   :config
-;;   (require 'semantic/symref/grep)
-;;   (add-to-list 'semantic-symref-filepattern-alist
-;;                '(c++-ts-mode . ("*.h" "*.hpp" "*.c" "*.cpp" "*.cc"))
-;; 	       '(c-ts-mode . ("*.h" "*.c"))))
-
 (use-package semantic
   :ensure nil
   :config
@@ -56,33 +57,8 @@
                    (java-ts-mode . ("*.java"))))
     (add-to-list 'semantic-symref-filepattern-alist entry)))
 
+(use-package eglot :defer t)
 
-;; (use-package dumb-jump
-;;   :after xref
-;;   :config
-;;   (add-hook 'xref-backend-functions  #'dumb-jump-xref-activate))
+(use-package flymake :ensure nil)
 
-(use-package eglot
-  :defer t
-  :general
-  (np/leader-keys
-    :states '(normal visual)
-    :keympas 'eglot-mode-map
-    "ls" '(eglot :wk "start lsp")
-    "lq" '(eglot-shutdown :wk "shutdow lsp")
-    "lQ" '(eglot-shutdown-all :wk "shutdown all lsp")
-    "lR" '(eglot-rename :wk "rename symbol")
-    "la" '(eglot-code-actions :wk "code actions")
-    "lf" '(eglot-format :wk "format buffer")
-    "ld" '(eglot-find-declaration :wk "find declaration")
-    "lD" '(xref-find-definitions :wk "find definition")
-    "lr" '(xref-find-references :wk "find references")
-    ))
-
-(use-package flymake)
-
-(use-package transient)
-
-(use-package magit
-  :defer t
-  :after transient)
+(provide 'dev)

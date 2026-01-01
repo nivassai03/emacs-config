@@ -1,0 +1,27 @@
+# compiled elisp files
+*.elc
+
+# Autosaves
+/auto-save-list/
+/backup
+
+# treesitter
+/tree-sitter
+
+# Elpa
+/elpa/
+
+# History and state
+/bookmarks
+/places
+/projects
+/recentf
+/history
+/server
+
+# Cache/internal files
+/eln-cache
+/var/
+/url/
+/custom.el
+.DS_Store

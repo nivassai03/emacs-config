@@ -2,7 +2,6 @@
     :ensure nil
     :config
     (setq project-switch-commands #'project-find-file)
-    :config
     (defun np/project-switch-buffer-below ()
     (interactive)
     (let ((target-window (or (window-in-direction 'below)
@@ -29,19 +28,11 @@
     (let ((target-window (or (window-in-direction 'right)
                              (split-window-right))))
       (select-window target-window)
-      (call-interactively #'project-find-file)))
+      (call-interactively #'project-find-file))))
 
-    :general
-    (np/leader-keys
-    "pp"  #'project-switch-project
-    "pf"  #'project-find-file
-    "pD"  #'project-dired
-    "pb"  #'project-switch-to-buffer
-    "pk"  #'project-kill-buffers
-    "pe"  #'project-eshell
-    "pg"  #'project-find-regexp
-    "po"  '(:ignore :wk "open")
-    "pofh" '(np/project-open-file-below :wk "open file below")
-    "pofv" '(np/project-open-file-right :wk "open file right")
-    "pobh" '(np/project-switch-buffer-below :wk "open buffer below")
-    "pobv" '(np/project-switch-buffer-right :wk "open buffer right")))
+(use-package transient)
+(use-package magit
+  :defer t
+  :after transient)
+
+(provide 'projects)

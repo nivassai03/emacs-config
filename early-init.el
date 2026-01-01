@@ -1,8 +1,3 @@
-;; (push '(menu-bar-lines . 0) default-frame-alist)
-;; (push '(tool-bar-lines . 0) default-frame-alist)
-;; (push '(vertical-scroll-bars) default-frame-alist)
-
-
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -15,5 +10,6 @@
 (setq gc-cons-threshold (* 256 1000 1000)
       gc-cons-percentage 0.8)
 
-;; disable package.el to use elpaca
-(setq package-enable-at-startup nil)
+(setq package-enable-at-startup t)
+
+
