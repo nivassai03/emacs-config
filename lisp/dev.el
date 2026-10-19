@@ -24,6 +24,17 @@
 
 (use-package treesit
   :defer t
+  :init
+  (setq treesit-font-lock-level 4
+	c-ts-mode-indent-style 'bsd)
+
+  ;; Emacs 29/30 versus 31+
+  (if (>= emacs-major-version 31)
+      (setq c-ts-indent-offset 4)
+    (setq c-ts-mode-indent-offset 4))
+
+  (setq-default indent-tabs-mode nil)
+
   :ensure nil
   :preface
   (defun np/setup-install-grammars ()
@@ -44,14 +55,33 @@
   (np/setup-install-grammars))
 
 (use-package apheleia
+  :demand t
+
   :config
+  ;; Reuse the built-in clang-format command and
+  ;; add Microsoft as the fallback style.
   (setf (alist-get 'clang-format-ms apheleia-formatters)
-	'("clang-format" "--fallback-style=Microsoft"))
-  (add-to-list 'apheleia-mode-alist '(c++-ts-mode . clang-format-ms))
-  (add-to-list 'apheleia-mode-alist '(c-ts-mode . clang-format-ms))
-  (apheleia-global-mode +1)
+        (append
+         (alist-get 'clang-format apheleia-formatters)
+         '("--fallback-style=Microsoft")))
+
+  ;; C/C++ Tree-sitter modes
+  (setf (alist-get 'c++-ts-mode apheleia-mode-alist)
+        'clang-format-ms)
+
+  (setf (alist-get 'c-ts-mode apheleia-mode-alist)
+        'clang-format-ms)
+
+  ;; Format automatically on save
+  (apheleia-global-mode 1)
+
   :bind
   ("C-c l f" . apheleia-format-buffer))
+
+(use-package man
+  :ensure nil
+  :custom
+  (Man-coding-system 'utf-8))
 
 
 (provide 'dev)

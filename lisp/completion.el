@@ -47,5 +47,17 @@
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
+(use-package consult
+  :bind
+  (("C-c s m" . consult-man)
+   ("C-c s i" . consult-imenu)
+   ("C-c s l" . consult-line)
+   ("C-c s r" . consult-ripgrep))
+  :config
+  (consult-customize
+   consult-man
+   :preview-key "M-."))
+
+
 (provide 'completion)
 
